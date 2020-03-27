@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    term: '',
+    option: 'story',
+    data: null
+  }
+
+  handleChange = (event) => {
+    const query = event.target.value
+    this.setState({ term: query })
+    // console.log(this.state)
+  }
+
+
+
+//res.data.hits
+getbyComment = (e) => {
+  e.preventDefault()
+    axios.get(`http://hn.algolia.com/api/v1/search?query=${this.state.term}&tags=comment`)
+    .then(res => { console.log(res.data.hits)})
+}
+
+  render(){
+    return(
+      <div>
+        <form onSubmit={this.getbyComment}>
+        <input placeholder="search for" onChange={this.handleChange} value={this.state.term} />
+        <input type="submit" value="Submit" />
+      
+        </form>
+        {this.state.data}
+      </div>
+    )
+    }
 }
 
 export default App;
